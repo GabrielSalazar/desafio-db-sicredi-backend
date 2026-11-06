@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>br.com.desafio</groupId>
-    <artifactId>desafio-sicredi</artifactId>
+    <artifactId>api-dummyjson</artifactId>
     <version>1.0.0</version>
-    <name>Desafio QE Sicredi - testes de API</name>
+    <name>Desafio Automação API - dummyjson (v2 - autenticação)</name>
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
@@ -16,25 +16,47 @@
         <!-- Versões centralizadas para facilitar atualizações -->
         <restassured.version>5.5.0</restassured.version>
         <junit.version>5.11.3</junit.version>
+        <jackson.version>2.18.1</jackson.version>
         <allure.version>2.29.0</allure.version>
     </properties>
+
     <dependencies>
+        <!-- RestAssured: DSL para requisições HTTP e validação de respostas -->
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
             <version>${restassured.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>json-schema-validator</artifactId>
-            <version>${restassured.version}</version>
-            <scope>test</scope>
-        </dependency>
+
+        <!-- JUnit 5: motor de execução dos testes -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Jackson: o RestAssured precisa dele para transformar o Map do body em JSON -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Allure: relatório automático de execução (rastreabilidade) -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit5</artifactId>
+            <version>${allure.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Anexa request/response de cada chamada ao relatório Allure -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-rest-assured</artifactId>
+            <version>${allure.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -45,6 +67,22 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
+                <configuration>
+                    <!-- Pasta onde o Allure grava os resultados brutos da execução -->
+                    <systemPropertyVariables>
+                        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+
+            <!-- Relatório: mvn io.qameta.allure:allure-maven:2.15.0:serve -->
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>2.15.0</version>
+                <configuration>
+                    <reportVersion>${allure.version}</reportVersion>
+                </configuration>
             </plugin>
         </plugins>
     </build>
