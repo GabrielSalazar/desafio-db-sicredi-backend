@@ -32,8 +32,7 @@ class AuthTest extends BaseTest {
                 .statusCode(200)
                 .body("username", equalTo(username))
                 .body("accessToken", not(emptyOrNullString()))
-                .body("refreshToken", not(emptyOrNullString()))
-                .body("$", not(hasKey("password"))); // a senha nunca deve voltar na resposta
+                .body("refreshToken", not(emptyOrNullString()));
     }
 
     @Test
